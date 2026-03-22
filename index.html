@@ -6,39 +6,42 @@
     <title>EGE English Master - Task 3</title>
     <style>
         :root {
-            --primary: #365777;
-            --accent: #4fb9c7;
-            --success: #47a76a;
-            --danger: #9d0c15;
-            --light: #f2f5f8;
+            --primary: #2c435b;
+            --accent: #1db8c9;
+            --success: #27ae60;
+            --danger: #de3320;
+            --light: #ecf0f1;
         }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f0fdff;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #f4f7f6;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
-        /* Навигация (Вкладки) */
         nav {
             background: var(--primary);
             width: 100%;
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 10px;
             padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         nav button {
             background: none;
             border: 2px solid transparent;
             color: white;
-            padding: 8px 20px;
+            padding: 8px 15px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             border-radius: 20px;
             transition: 0.3s;
         }
@@ -49,82 +52,105 @@
         }
 
         .container {
-            width: 90%;
-            max-width: 800px;
+            width: 95%;
+            max-width: 700px;
             background: white;
-            margin: 20px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Тренажер */
         .timer-box {
-            font-size: 48px;
+            font-size: 3.5rem;
             font-weight: bold;
             color: var(--primary);
-            margin: 20px 0;
             text-align: center;
+            margin: 15px 0;
+            font-variant-numeric: tabular-nums;
         }
 
         .question-text {
-            font-size: 1.4rem;
-            min-height: 80px;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            min-height: 100px;
             text-align: center;
-            color: #444;
+            color: #333;
             padding: 20px;
             background: var(--light);
-            border-radius: 8px;
+            border-radius: 12px;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .controls {
             display: flex;
-            justify-content: center;
-            gap: 15px;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        button.main-btn {
-            background: var(--accent);
+        button.main-btn {background: var(--accent);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
-        }
-        button.skip-btn { background: #959ea6; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; }
-
-        /* История */
-        .history-item {
-            border-bottom: 1px solid #ddd;
-            padding: 15px 0;
-        }
-        audio { width: 100%; margin-top: 10px; }
-
-        /* Справочник */
-        .info-card {
-            background: #f3fdfd;
-            border-left: 5px solid var(--accent);
-            padding: 15px;
-            margin-bottom: 15px;
+            font-weight: 600;
         }
 
-        .error-list { color: var(--danger); }
-        .success-list { color: var(--success); }
+        button.skip-btn {
+            background: #bdc3c7;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
 
         .rec-indicator {
             color: var(--danger);
             font-weight: bold;
-            display: none;
             text-align: center;
-            animation: blink 1s infinite;
+            height: 24px;
+            margin-bottom: 10px;
+            visibility: hidden;
         }
 
-        @keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }
+        .rec-active { visibility: visible; animation: blink 1s infinite; }
+
+        @keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.4;} 100% {opacity: 1;} }
+
+        .history-item {
+            background: #fff;
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+
+        audio { width: 100%; margin-top: 10px; }
+
+        .info-card {
+            background: #fdfaf5;
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -136,59 +162,49 @@
 </nav>
 
 <div class="container">
-    <!-- ВКЛАДКА ТРЕНАЖЕР -->
+    <!-- ТРЕНАЖЕР -->
     <div id="trainer" class="tab-content active">
-        <h2 id="topicHeading">Выбор темы</h2>
+        <h2 id="statusTitle">Подготовка к интервью</h2>
         <div id="setup">
-            <select id="topicSelect" style="width: 100%; padding: 10px; margin-bottom: 20px; font-size: 16px;"></select>
+            <p>Выберите тему интервью (банк заданий ФИПИ):</p>
+            <select id="topicSelect"></select>
             <button class="main-btn" style="width: 100%" onclick="startExam()">Начать тренировку</button>
         </div>
 
         <div id="exam-ui" style="display: none;">
-            <div id="progressText">Вопрос 1 из 5</div>
+            <div id="progressText" style="text-align: center; color: #7f8c8d; font-weight: bold;">Вопрос 1 из 5</div>
             <div class="timer-box" id="timer">40</div>
-            <div class="rec-indicator" id="rec-label">● ИДЕТ ЗАПИСЬ...</div>
+            <div class="rec-indicator" id="rec-label">● ИДЕТ ЗАПИСЬ ОТВЕТА</div>
             <div class="question-text" id="questionText">Слушайте вопрос...</div>
             <div class="controls">
-                <button class="skip-btn" onclick="skipQuestion()">Пропустить</button>
+                <button class="skip-btn" onclick="skipQuestion()">Пропустить вопрос</button>
             </div>
         </div>
     </div>
 
-    <!-- ВКЛАДКА ИСТОРИЯ -->
+    <!-- ИСТОРИЯ -->
     <div id="history" class="tab-content">
-        <h2>Ваши аудиозаписи</h2>
-        <div id="history-list">Записей пока нет. Пройдите тест до конца.</div>
+        <h2>Архив вашей сессии</h2>
+        <div id="history-list">Записей пока нет. Пройдите тренировку до конца.</div>
     </div>
 
-    <!-- ВКЛАДКА СПРАВОЧНИК -->
+    <!-- СПРАВОЧНИК -->
     <div id="info" class="tab-content">
-        <h2>Полезные материалы</h2>
+        <h2>Полезные советы</h2>
         <div class="info-card">
-            <h3>Критерии оценивания:</h3>
+            <strong>Критерии успеха:</strong>
             <ul>
-                <li>Максимум — 5 баллов (по 1 за каждый полный ответ).</li>
-                <li>В ответе должно быть не менее 2-3 фраз.</li>
-                <li>Ответ должен быть грамматически верным и по существу.</li>
+                <li>Давайте развернутый ответ (2-3 предложения).</li>
+                <li>Избегайте простых "Yes/No", всегда добавляйте "because...".</li>
+                <li>Следите за временем: у вас ровно 40 секунд.</li>
             </ul>
         </div>
-        <div class="info-card error-list">
-            <h3>Типичные ошибки:</h3>
+        <div class="info-card" style="border-left-color: var(--success);">
+            <strong>Фразы-клише:</strong>
             <ul>
-                <li>Слишком короткий ответ (одно слово или фраза).</li>
-                <li>Ответ не на тот вопрос (невнимательно слушали).</li>
-                <li>Длительные паузы (не уложились в 40 секунд).</li>
-                <li>Фонетические ошибки, мешающие пониманию.</li>
-                <li>Недостаточное понимание вопроса и/или непонятные конструкции предложений</li>
-            </ul>
-        </div>
-        <div class="info-card success-list">
-            <h3>Фразы-помощники (Model Phrases):</h3>
-            <ul>
-                <li>Well, it’s a difficult question to answer but...</li>
-                <li>Actually, I’ve never thought about it before, however...</li>
-                <li>In my opinion / From my point of view...</li>
-                <li>That's why I think so.</li>
+                <li>In my opinion... / From my point of view...</li>
+                <li>Actually, I've never thought about it, but...</li>
+                <li>That's why I believe that...</li>
             </ul>
         </div>
     </div>
@@ -196,40 +212,12 @@
 
 <script>
     const examData = {
-        "Holidays & Travel": [
-            "What region of Russia do you live in? What isthe climate like there?",
-            "What is your favourite season? Why do you like it?",
-            "What is the weather like today? Do you like it?",
-            "Do you prefer to travel or stay at home during your holidays?",
-            "What would you recommend to a person who is visiting your region for the first time?"
-        ],
-        "School Life": [
-            "What is your favourite subject at school? Why?",
-            "What is your typical school day like?",
-            "Do you think your school is well-equipped? Why?",
-            "What would you like to change in your school?",
-            "What advice would you give to a person who wants to be successful at school?"
-        ],
-        "Environmental Issues": [
-            "What are the main environmental problems in your region?",
-            "What does your family do to help the environment?",
-            "Do you think people should recycle more? Why?",
-            "How can teenagers help to protect nature?",
-            "What would you recommend to people to make their city cleaner?"
-        ],
         "Internet & Gadgets": [
             "What gadgets do you use every day?",
             "What do you use the Internet for?",
             "Do you think the Internet is dangerous for teenagers? Why?",
             "How much time do you spend online every day?",
             "What advice would you give to a person who spends too much time with gadgets?"
-        ],
-        "Sport & Health": [
-            "What is your favourite sport? Is it popular in Russia?",
-            "Do you prefer doing sports or watching it on TV?",
-            "How many times a week do you do physical exercises?",
-            "What do you do to keep fit and healthy?",
-            "What advice would you give to a person who wants to start a healthy lifestyle?"
         ],
         "Accommodation": [
             "In what region do you live? Do you live in a big city, a town or in a village?",
@@ -258,18 +246,46 @@
             "What clothes do you usually wear to school?",
             "Did your parents use to wear school uniform in the past?",
             "Should all school students wear uniform in the future? Why?"
+        ],
+        "School Life": [
+            "What is your favourite subject at school? Why?",
+            "What is your typical school day like?",
+            "Do you think your school is well-equipped? Why?",
+            "What would you like to change in your school?",
+            "What advice would you give to a person who wants to be successful at school?"
+        ],
+        "Environmental Issues": [
+            "What are the main environmental problems in your region?",
+            "What does your family do to help the environment?",
+            "Do you think people should recycle more? Why?",
+            "How can teenagers help to protect nature in their everyday life?",
+            "What would you recommend to people to make their city cleaner?"
+        ],
+        "Sport & Health": [
+            "What is your favourite sport? Is it popular in Russia?",
+            "Do you prefer doing sports or watching it on TV? Why?",
+            "How many times a week do you do physical exercises?",
+            "What do you do to keep fit and healthy?",
+            "What advice would you give to a person who wants to start a healthy lifestyle?"
+        ],
+        "Holidays & Travel": [
+            "What region of Russia do you live in? What is the climate like there?",
+            "What is your favourite season? Why do you like it?",
+            "What is the weather like today? Do you like it?",
+            "Do you prefer to travel or stay at home during your holidays? Why?",
+            "What would you recommend to a person who is visiting your region for the first time?"
         ]
     };
 
     let currentQuestions = [];
     let currentIdx = 0;
-    let timer;
+    let timerInterval = null;
     let timeLeft = 40;
-    let mediaRecorder;
+    let mediaRecorder = null;
     let audioChunks = [];
     let sessionRecordings = [];
+    const synth = window.speechSynthesis;
 
-    // Инициализация тем
     const topicSelect = document.getElementById('topicSelect');
     Object.keys(examData).forEach(t => {
         let opt = document.createElement('option');
@@ -288,59 +304,67 @@
         currentQuestions = examData[topicSelect.value];
         currentIdx = 0;
         sessionRecordings = [];
-        document.getElementById('setup').style.display = 'none';
-        document.getElementById('exam-ui').style.display = 'block';
         
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
             
-            mediaRecorder.ondataavailable = (event) => {
-                audioChunks.push(event.data);
+            mediaRecorder.ondataavailable = (e) => {
+                if (e.data.size > 0) audioChunks.push(e.data);
             };
 
             mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                const audioUrl = URL.createObjectURL(audioBlob);
-                sessionRecordings.push({
-                    q: currentQuestions[currentIdx],
-                    url: audioUrl
-                });
+                const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                const url = URL.createObjectURL(blob);
+                sessionRecordings.push({ q: currentQuestions[currentIdx], url: url });
                 audioChunks = [];
             };
 
-            runQuestionCycle();
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('exam-ui').style.display = 'block';
+            runCycle();
         } catch (err) {
-            alert("Для работы тренажера нужен доступ к микрофону!");
+            alert("Ошибка: Необходим доступ к микрофону для записи ваших ответов.");
         }
     }
 
-    function runQuestionCycle() {
+    function runCycle() {
         if (currentIdx >= currentQuestions.length) {
             finishExam();
             return;
         }
+
+        clearInterval(timerInterval);
+        synth.cancel();
+
         document.getElementById('progressText').innerText = `Вопрос ${currentIdx + 1} из 5`;
         document.getElementById('questionText').innerText = "Слушайте вопрос...";
-        document.getElementById('rec-label').style.display = 'none';
+        document.getElementById('rec-label').classList.remove('rec-active');
         document.getElementById('timer').innerText = "40";
 
-        const msg = new SpeechSynthesisUtterance(currentQuestions[currentIdx]);
-        msg.lang = 'en-US';
-        msg.onend = () => {
+        const utterance = new SpeechSynthesisUtterance(currentQuestions[currentIdx]);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+
+        utterance.onend = () => {
             document.getElementById('questionText').innerText = currentQuestions[currentIdx];
             startRecording();
         };
-        window.speechSynthesis.speak(msg);
+
+        setTimeout(() => synth.speak(utterance), 600);
     }
 
     function startRecording() {
         audioChunks = [];
-        mediaRecorder.start();
-        document.getElementById('rec-label').style.display = 'block';
+        if (mediaRecorder && mediaRecorder.state === "inactive") {
+            mediaRecorder.start();
+        }
         
+        document.getElementById('rec-label').classList.add('rec-active');
         timeLeft = 40;
-        timer = setInterval(() => {
+        document.getElementById('timer').innerText = timeLeft;
+
+        timerInterval = setInterval(() => {
             timeLeft--;
             document.getElementById('timer').innerText = timeLeft;
             if (timeLeft <= 0) {
@@ -350,44 +374,58 @@
     }
 
     function stopAndNext() {
-        clearInterval(timer);
-        if (mediaRecorder.state !== "inactive") mediaRecorder.stop();
+        clearInterval(timerInterval);
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+        }
         
         setTimeout(() => {
             currentIdx++;
-            runQuestionCycle();
+            runCycle();
         }, 1000);
     }
 
     function skipQuestion() {
-        window.speechSynthesis.cancel();
-        clearInterval(timer);
-        if (mediaRecorder.state !== "inactive") mediaRecorder.stop();
+        clearInterval(timerInterval);
+        synth.cancel();
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+        }
+        
         currentIdx++;
-        runQuestionCycle();
+        runCycle();
     }
 
     function finishExam() {
-        document.getElementById('exam-ui').innerHTML = "<h3>Тест завершен!</h3><button class='main-btn' onclick='location.reload()'>Пройти еще раз</button>";
-        updateHistory();
+        clearInterval(timerInterval);
+        synth.cancel();
+        
+        document.getElementById('exam-ui').innerHTML = `
+            <div style="text-align:center; padding: 20px;">
+                <h3 style="color: var(--success);">Поздравляем! Тренировка завершена.</h3>
+                <p>Вы можете прослушать свои ответы во вкладке <strong>"Мои ответы"</strong>.</p>
+                <button class="main-btn" onclick="location.reload()">Выбрать другую тему</button>
+            </div>
+        `;
+        updateHistoryUI();
     }
 
-    function updateHistory() {
+    function updateHistoryUI() {
         const list = document.getElementById('history-list');
+        if (sessionRecordings.length === 0) return;
+        
         list.innerHTML = "";
-        sessionRecordings.forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = "history-item";
-            div.innerHTML = `
-                <strong>Вопрос ${index + 1}:</strong> ${item.q}
-
+        sessionRecordings.forEach((item, i) => {
+            const el = document.createElement('div');
+            el.className = 'history-item';
+            el.innerHTML = `
+                <div style="margin-bottom: 5px;"><strong>Вопрос ${i+1}:</strong> ${item.q}</div>
                 <audio controls src="${item.url}"></audio>
-                
-<a href="${item.url}" download="answer_${index+1}.wav">Скачать запись</a>
             `;
-            list.appendChild(div);
+            list.appendChild(el);
         });
     }
 </script>
+
 </body>
 </html>
